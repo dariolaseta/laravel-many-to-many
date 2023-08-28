@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Admin\Project;
+use App\Models\Admin\Technology;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
 
@@ -24,7 +25,9 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view("admin.project.create");
+        $technologies = Technology::all();
+
+        return view("admin.project.create", compact("technologies"));
     }
 
     /**
@@ -32,9 +35,11 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+        $technologies = Technology::all();
         $data = $request->validate([
             "title" => ["required", "unique:projects","min:3", "max:255"],
             "image" => ["image"],
+            "technology"=>["technology"],
             "content" => ["required", "min:10"],
         ]);
 
@@ -46,6 +51,7 @@ class ProjectController extends Controller
         $newProject = Project::create($data);
         $newProject->save();
 
+        $newProject->technologies()->attach($data["technology"]);
         return redirect()->route("admin.project.show", $newProject);
     }
 

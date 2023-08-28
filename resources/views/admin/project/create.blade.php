@@ -39,6 +39,12 @@
                     </textarea>
                 </div>
 
+                @foreach ($technologies as $technology)
+                <input type="checkbox" value="{{$technology->id}}" name = "technology" id="{{$technology->id}}">
+                <label for="{{$technology->id}}">{{$technology->name}}</label>
+                
+                @endforeach
+
                 <div class="mb-3">
                     <button type="submit" class="btn btn-sm btn-success">
                         Create new project
